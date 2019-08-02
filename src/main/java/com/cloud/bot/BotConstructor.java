@@ -89,7 +89,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 		List<KeyboardRow> buttonsList = new ArrayList<KeyboardRow>();
 		keybord.setSelective(true);
 		keybord.setResizeKeyboard(true);
-		keybord.setOneTimeKeyboard(false);
+		keybord.setOneTimeKeyboard(true);
 		
 		KeyboardRow firstKeyboardRow = new KeyboardRow();
 		firstKeyboardRow.add(new KeyboardButton("Archive"));
