@@ -6,10 +6,7 @@ import java.util.List;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -34,10 +31,6 @@ public class BotConstructor extends TelegramLongPollingBot{
 		}
 	}
 
-	private void senderConstruct() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	@SuppressWarnings("deprecation")
 	private void sendMessage(String chatId, String message) {
@@ -76,7 +69,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 		messageData.setText(message);
 		
 		try {
-			setButtonsForActions(messageData);
+			sendButtonsForActions(messageData);
 			sendMessage(messageData);
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
@@ -85,18 +78,25 @@ public class BotConstructor extends TelegramLongPollingBot{
 	
 	
 	
-	private void setButtonsForActions(SendMessage message) {
+	private void sendButtonsForActions(SendMessage message) {
 		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 		message.setReplyMarkup(keyboard);
-		List<List<InlineKeyboardButton>> buttonsList = new ArrayList<List<InlineKeyboardButton>>();
-		List<InlineKeyboardButton> f = new ArrayList<InlineKeyboardButton>();
-		buttonsList.add(f);
-	    
-	    keyboard.setKeyboard(buttonsList);
+		List<List<InlineKeyboardButton>> rowButtonsList = new ArrayList<List<InlineKeyboardButton>>();
+		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
+		InlineKeyboardButton archiveKey = new InlineKeyboardButton();
+		InlineKeyboardButton unzipKey = new InlineKeyboardButton();
+		inlineKB.add(archiveKey.setText("Archive").setCallbackData("Hello"));
+		inlineKB.add(unzipKey.setText("Unzip").setCallbackData("Hi"));
+		rowButtonsList.add(inlineKB);
+		
+		setButtonsForArchive(inlineKB);
+		keyboard.setKeyboard(rowButtonsList);
 	}
 
-	private synchronized void setButtonsForArchive() {
-		//TODO: will set buttons for archive
+	private synchronized void setButtonsForArchive(List<InlineKeyboardButton> list) {
+		if(list.get(0).getText() == "Archive" || list.get(1).getText() == "Unzip") {
+			//TODO: Some actions
+		}
 	}
 	
 	public String getBotUsername() {
@@ -105,7 +105,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 
 	@Override
 	public String getBotToken() {
-		return "BOT_TOKEN";
+		return "924748393:AAErxKwKmjVDLdD6a-8F_u9eHKwWB8mN4pM";
 	}
 	
 }
