@@ -88,11 +88,13 @@ public class BotConstructor extends TelegramLongPollingBot{
 	private void setButtonsForActions(SendMessage message) {
 		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 		message.setReplyMarkup(keyboard);
-		List<List<InlineKeyboardButton>> buttonsList = new ArrayList<List<InlineKeyboardButton>>();
-		List<InlineKeyboardButton> f = new ArrayList<InlineKeyboardButton>();
-		buttonsList.add(f);
-	    
-	    keyboard.setKeyboard(buttonsList);
+		List<List<InlineKeyboardButton>> kb = new ArrayList<List<InlineKeyboardButton>>();
+		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
+		inlineKB.add(new InlineKeyboardButton().setText("Archive").setCallbackData("Hello"));
+		inlineKB.add(new InlineKeyboardButton().setText("Archive").setCallbackData("Hi"));
+		kb.add(inlineKB);
+		
+		keyboard.setKeyboard(kb);
 	}
 
 	private synchronized void setButtonsForArchive() {
@@ -105,7 +107,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 
 	@Override
 	public String getBotToken() {
-		return "BOT_TOKEN";
+		return "924748393:AAErxKwKmjVDLdD6a-8F_u9eHKwWB8mN4pM";
 	}
 	
 }
