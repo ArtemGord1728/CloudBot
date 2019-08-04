@@ -95,7 +95,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 
 	private synchronized void actionsWithArchives(List<InlineKeyboardButton> list) {
 		if(list.get(0).getText() == "Archive" || list.get(1).getText() == "Unzip") {
-			//TODO: Some actions
+			
 		}
 	}
 	
