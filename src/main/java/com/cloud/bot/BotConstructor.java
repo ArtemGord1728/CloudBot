@@ -6,10 +6,7 @@ import java.util.List;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -87,7 +84,6 @@ public class BotConstructor extends TelegramLongPollingBot{
 	
 	private void setButtonsForActions(SendMessage message) {
 		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-		message.setReplyMarkup(keyboard);
 		List<List<InlineKeyboardButton>> kb = new ArrayList<List<InlineKeyboardButton>>();
 		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
 		inlineKB.add(new InlineKeyboardButton().setText("Archive").setCallbackData("Hello"));
@@ -95,6 +91,8 @@ public class BotConstructor extends TelegramLongPollingBot{
 		kb.add(inlineKB);
 		
 		keyboard.setKeyboard(kb);
+		message.setReplyMarkup(keyboard);
+
 	}
 
 	private synchronized void setButtonsForArchive() {
