@@ -89,11 +89,11 @@ public class BotConstructor extends TelegramLongPollingBot{
 		inlineKB.add(unzipKey.setText("Unzip").setCallbackData("Hi"));
 		rowButtonsList.add(inlineKB);
 		
-		setButtonsForArchive(inlineKB);
+		actions(inlineKB);
 		keyboard.setKeyboard(rowButtonsList);
 	}
 
-	private synchronized void setButtonsForArchive(List<InlineKeyboardButton> list) {
+	private synchronized void actions(List<InlineKeyboardButton> list) {
 		if(list.get(0).getText() == "Archive" || list.get(1).getText() == "Unzip") {
 			//TODO: Some actions
 		}
