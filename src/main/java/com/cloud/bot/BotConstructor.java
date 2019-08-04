@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -38,7 +40,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 	}
 	
 	@SuppressWarnings("deprecation")
-	private synchronized void sendMessage(String chatId, String message) {
+	private void sendMessage(String chatId, String message) {
 		SendMessage messageData = new SendMessage();
 		messageData.enableMarkdown(true);
 		messageData.setChatId(chatId);
@@ -52,7 +54,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 	}
 	
 	@SuppressWarnings("deprecation")
-	private synchronized void sendHelp(String chatId, String message) {
+	private void sendHelp(String chatId, String message) {
 		SendMessage messageData = new SendMessage();
 		messageData.enableMarkdown(true);
 		messageData.setChatId(chatId);
@@ -67,7 +69,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 	}
 	
 	@SuppressWarnings("deprecation")
-	private synchronized void sendActions(String chatId, String message) {
+	private void sendActions(String chatId, String message) {
 		SendMessage messageData = new SendMessage();
 		messageData.enableMarkdown(true);
 		messageData.setChatId(chatId);
@@ -83,24 +85,14 @@ public class BotConstructor extends TelegramLongPollingBot{
 	
 	
 	
-	private synchronized void setButtonsForActions(SendMessage message) {
-		ReplyKeyboardMarkup keybord = new ReplyKeyboardMarkup();
-		message.setReplyMarkup(keybord);
-		List<KeyboardRow> buttonsList = new ArrayList<KeyboardRow>();
-		keybord.setSelective(true);
-		keybord.setResizeKeyboard(true);
-		keybord.setOneTimeKeyboard(true);
-		
-		KeyboardRow firstKeyboardRow = new KeyboardRow();
-		firstKeyboardRow.add(new KeyboardButton("Archive"));
-		
-	    KeyboardRow secondKeyboardRow = new KeyboardRow();
-	    secondKeyboardRow.add(new KeyboardButton("Unzip"));
+	private void setButtonsForActions(SendMessage message) {
+		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+		message.setReplyMarkup(keyboard);
+		List<List<InlineKeyboardButton>> buttonsList = new ArrayList<List<InlineKeyboardButton>>();
+		List<InlineKeyboardButton> f = new ArrayList<InlineKeyboardButton>();
+		buttonsList.add(f);
 	    
-	    buttonsList.add(firstKeyboardRow);
-	    buttonsList.add(secondKeyboardRow);
-	    
-	    keybord.setKeyboard(buttonsList);
+	    keyboard.setKeyboard(buttonsList);
 	}
 
 	private synchronized void setButtonsForArchive() {
@@ -113,7 +105,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 
 	@Override
 	public String getBotToken() {
-		return "924748393:AAErxKwKmjVDLdD6a-8F_u9eHKwWB8mN4pM";
+		return "BOT_TOKEN";
 	}
 	
 }
