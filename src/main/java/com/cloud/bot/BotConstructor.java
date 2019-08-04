@@ -31,10 +31,6 @@ public class BotConstructor extends TelegramLongPollingBot{
 		}
 	}
 
-	private void senderConstruct() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	@SuppressWarnings("deprecation")
 	private void sendMessage(String chatId, String message) {
@@ -73,7 +69,7 @@ public class BotConstructor extends TelegramLongPollingBot{
 		messageData.setText(message);
 		
 		try {
-			setButtonsForActions(messageData);
+			sendButtonsForActions(messageData);
 			sendMessage(messageData);
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
@@ -82,21 +78,25 @@ public class BotConstructor extends TelegramLongPollingBot{
 	
 	
 	
-	private void setButtonsForActions(SendMessage message) {
+	private void sendButtonsForActions(SendMessage message) {
 		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-		List<List<InlineKeyboardButton>> kb = new ArrayList<List<InlineKeyboardButton>>();
-		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
-		inlineKB.add(new InlineKeyboardButton().setText("Archive").setCallbackData("Hello"));
-		inlineKB.add(new InlineKeyboardButton().setText("Archive").setCallbackData("Hi"));
-		kb.add(inlineKB);
-		
-		keyboard.setKeyboard(kb);
 		message.setReplyMarkup(keyboard);
-
+		List<List<InlineKeyboardButton>> rowButtonsList = new ArrayList<List<InlineKeyboardButton>>();
+		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
+		InlineKeyboardButton archiveKey = new InlineKeyboardButton();
+		InlineKeyboardButton unzipKey = new InlineKeyboardButton();
+		inlineKB.add(archiveKey.setText("Archive").setCallbackData("Hello"));
+		inlineKB.add(unzipKey.setText("Unzip").setCallbackData("Hi"));
+		rowButtonsList.add(inlineKB);
+		
+		actionsWithArchives(inlineKB);
+		keyboard.setKeyboard(rowButtonsList);
 	}
 
-	private synchronized void setButtonsForArchive() {
-		//TODO: will set buttons for archive
+	private synchronized void actionsWithArchives(List<InlineKeyboardButton> list) {
+		if(list.get(0).getText() == "Archive" || list.get(1).getText() == "Unzip") {
+			//TODO: Some actions
+		}
 	}
 	
 	public String getBotUsername() {
