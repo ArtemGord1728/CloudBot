@@ -28,10 +28,12 @@ public class BotConstructor extends TelegramLongPollingBot{
                 sendButtonsForActions(message, "Archive", "Unzip");
                 try {
                     execute(message); 
-
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
+            }
+            if(update.getMessage().getText().equals(BotCommands.HELP.getCommand())) {
+            	sendResponce(chatId, BotResponse.HELP_RESPONCE);
             }
         } 
         else if (update.hasCallbackQuery()) {
@@ -39,9 +41,8 @@ public class BotConstructor extends TelegramLongPollingBot{
             long chatId = update.getCallbackQuery().getMessage().getChatId();
             
             if (callData.equals("archive")) {
-                message     
-                        .setChatId(chatId)
-                        .setText(BotResponse.ARCHIVE_RESPONCE);
+                message.setChatId(chatId)
+                       .setText(BotResponse.ARCHIVE_RESPONCE);
                 sendButtonsForActions(message, ArchiveConstants.ARCHIVE_ZIP, ArchiveConstants.ARCHIVE_RAR);
                 try {
                     execute(message);
@@ -52,6 +53,18 @@ public class BotConstructor extends TelegramLongPollingBot{
         }
 	}
 	
+	private void sendResponce(Long chatId, String text) {
+		message = new SendMessage();
+		message.enableMarkdown(true);
+		message.setChatId(chatId);
+		message.setText(text);
+		
+		try {
+			execute(message);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void sendButtonsForActions(SendMessage message, String text1, String text2) {
 		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
