@@ -4,78 +4,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import com.cloud.core.BotConfig;
 import com.cloud.core.BotResponse;
 
 public class BotConstructor extends TelegramLongPollingBot{
 
 	public void onUpdateReceived(Update update) {
-		String message = update.getMessage().getText();
-		
-		//TODO: Will update this code
-		if(message.equals(BotCommands.START.getCommand())) {
-			sendMessage(update.getMessage().getChatId().toString(), BotResponse.START_RESPONCE);
-		}
-		
-		if(message.equals(BotCommands.ACTIONS.getCommand())) {
-			sendActions(update.getMessage().getChatId().toString(), BotResponse.ACTIONS_RESPONCE);
-		}
-		
-		if(message.equals(BotCommands.HELP.getCommand())) {
-			sendHelp(update.getMessage().getChatId().toString(), BotResponse.HELP_RESPONCE);
-		}
-	}
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            long chatId = update.getMessage().getChatId();
+            if (update.getMessage().getText().equals(BotCommands.ACTIONS.getCommand())) {
+                SendMessage message = new SendMessage() 
+                        .setChatId(chatId)
+                        .setText(BotResponse.ACTIONS_RESPONCE);
+                sendButtonsForActions(message);
+                try {
+                    execute(message); 
 
-	
-	@SuppressWarnings("deprecation")
-	private void sendMessage(String chatId, String message) {
-		SendMessage messageData = new SendMessage();
-		messageData.enableMarkdown(true);
-		messageData.setChatId(chatId);
-		messageData.setText(message);
-		
-		try {
-			sendMessage(messageData);
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
-		}
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            } else {
+            }
+        } else if (update.hasCallbackQuery()) {
+            String callData = update.getCallbackQuery().getData();
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
+            long chatId = update.getCallbackQuery().getMessage().getChatId();
+            
+            if (callData.equals("archive")) {
+                String answer = "Updated message text";
+                EditMessageText new_message = new EditMessageText()    
+
+                        .setChatId(chatId)
+                        .setMessageId((int) messageId)
+                        .setText(answer);
+                try {
+                    execute(new_message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 	}
-	
-	@SuppressWarnings("deprecation")
-	private void sendHelp(String chatId, String message) {
-		SendMessage messageData = new SendMessage();
-		messageData.enableMarkdown(true);
-		messageData.setChatId(chatId);
-		messageData.setText(message);
-		
-		try {
-			sendMessage(messageData);
-			
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	private void sendActions(String chatId, String message) {
-		SendMessage messageData = new SendMessage();
-		messageData.enableMarkdown(true);
-		messageData.setChatId(chatId);
-		messageData.setText(message);
-		
-		try {
-			sendButtonsForActions(messageData);
-			sendMessage(messageData);
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	
 	private void sendButtonsForActions(SendMessage message) {
@@ -85,8 +61,8 @@ public class BotConstructor extends TelegramLongPollingBot{
 		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
 		InlineKeyboardButton archiveKey = new InlineKeyboardButton();
 		InlineKeyboardButton unzipKey = new InlineKeyboardButton();
-		inlineKB.add(archiveKey.setText("Archive").setCallbackData("Hello"));
-		inlineKB.add(unzipKey.setText("Unzip").setCallbackData("Hi"));
+		inlineKB.add(archiveKey.setText("Archive").setCallbackData("archive"));
+		inlineKB.add(unzipKey.setText("Unzip").setCallbackData("unzip"));
 		rowButtonsList.add(inlineKB);
 		
 		actionsWithArchives(inlineKB);
@@ -100,12 +76,12 @@ public class BotConstructor extends TelegramLongPollingBot{
 	}
 	
 	public String getBotUsername() {
-		return "CloudBot";
+		return BotConfig.BOT_USERNAME;
 	}
 
 	@Override
 	public String getBotToken() {
-		return "924748393:AAErxKwKmjVDLdD6a-8F_u9eHKwWB8mN4pM";
+		return BotConfig.BOT_TOKEN;
 	}
 	
 }
