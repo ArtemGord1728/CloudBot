@@ -4,48 +4,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import com.cloud.archiver.ArchiveConstants;
 import com.cloud.core.BotConfig;
 import com.cloud.core.BotResponse;
 
 public class BotConstructor extends TelegramLongPollingBot{
 
+	private static SendMessage message;
+	
 	public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             long chatId = update.getMessage().getChatId();
             if (update.getMessage().getText().equals(BotCommands.ACTIONS.getCommand())) {
-                SendMessage message = new SendMessage() 
+                message = new SendMessage() 
                         .setChatId(chatId)
                         .setText(BotResponse.ACTIONS_RESPONCE);
-                sendButtonsForActions(message);
+                sendButtonsForActions(message, "Archive", "Unzip");
                 try {
                     execute(message); 
 
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-            } else {
             }
-        } else if (update.hasCallbackQuery()) {
+        } 
+        else if (update.hasCallbackQuery()) {
             String callData = update.getCallbackQuery().getData();
-            long messageId = update.getCallbackQuery().getMessage().getMessageId();
             long chatId = update.getCallbackQuery().getMessage().getChatId();
             
             if (callData.equals("archive")) {
-                String answer = "Updated message text";
-                EditMessageText new_message = new EditMessageText()    
-
+                message     
                         .setChatId(chatId)
-                        .setMessageId((int) messageId)
-                        .setText(answer);
+                        .setText(BotResponse.ARCHIVE_RESPONCE);
+                sendButtonsForActions(message, ArchiveConstants.ARCHIVE_ZIP, ArchiveConstants.ARCHIVE_RAR);
                 try {
-                    execute(new_message);
+                    execute(message);
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
@@ -54,15 +53,15 @@ public class BotConstructor extends TelegramLongPollingBot{
 	}
 	
 	
-	private void sendButtonsForActions(SendMessage message) {
+	private void sendButtonsForActions(SendMessage message, String text1, String text2) {
 		InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 		message.setReplyMarkup(keyboard);
 		List<List<InlineKeyboardButton>> rowButtonsList = new ArrayList<List<InlineKeyboardButton>>();
 		List<InlineKeyboardButton> inlineKB = new ArrayList<InlineKeyboardButton>();
 		InlineKeyboardButton archiveKey = new InlineKeyboardButton();
 		InlineKeyboardButton unzipKey = new InlineKeyboardButton();
-		inlineKB.add(archiveKey.setText("Archive").setCallbackData("archive"));
-		inlineKB.add(unzipKey.setText("Unzip").setCallbackData("unzip"));
+		inlineKB.add(archiveKey.setText(text1).setCallbackData("archive"));
+		inlineKB.add(unzipKey.setText(text2).setCallbackData("unzip"));
 		rowButtonsList.add(inlineKB);
 		
 		actionsWithArchives(inlineKB);
